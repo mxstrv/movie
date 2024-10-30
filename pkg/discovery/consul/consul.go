@@ -3,7 +3,9 @@ package consul
 import (
 	"context"
 	"errors"
+	"fmt"
 	consul "github.com/hashicorp/consul/api"
+	"movieapp/pkg/discovery"
 	"strconv"
 	"strings"
 )
@@ -48,8 +50,17 @@ func (r *Registry) Deregister(ctx context.Context, instanceID string, _ string) 
 
 // ServiceAddresses returns the list of addresses of active instances of the given service.
 func (r *Registry) ServiceAddresses(ctx context.Context, serviceName string) ([]string, error) {
-	//TODO: implement
-	return nil, nil
+	services, _, err := r.client.Health().Service(serviceName, "", true, nil)
+	if err != nil {
+		return nil, err
+	} else if len(services) == 0 {
+		return nil, discovery.ErrNotFound
+	}
+	var res []string
+	for _, e := range services {
+		res = append(res, fmt.Sprintf("%s:%d", e.Service.Address, e.Service.Port))
+	}
+	return res, nil
 }
 
 // ReportHealthyState is a push mechanism for reporting healthy state to the registry.
