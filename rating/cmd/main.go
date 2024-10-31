@@ -31,7 +31,7 @@ func main() {
 		ctx,
 		instanceID,
 		serviceName,
-		fmt.Sprintf("http://localhost:%d", port),
+		fmt.Sprintf("localhost:%d", port),
 	); err != nil {
 		panic(err)
 	}
@@ -50,7 +50,7 @@ func main() {
 	ctrl := rating.New(repo)
 	h := httphandler.New(ctrl)
 	http.Handle("/ratings", http.HandlerFunc(h.Handle))
-	if err := http.ListenAndServe(":8082", nil); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf("localhost:%d", port), nil); err != nil {
 		panic(err)
 	}
 }
