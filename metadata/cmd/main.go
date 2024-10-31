@@ -31,7 +31,7 @@ func main() {
 		ctx,
 		instanceID,
 		serviceName,
-		fmt.Sprintf("http://localhost:%d", port),
+		fmt.Sprintf("localhost:%d", port),
 	); err != nil {
 		panic(err)
 	}
@@ -51,7 +51,7 @@ func main() {
 	ctrl := metadata.New(repo)
 	h := httphandler.New(ctrl)
 	http.Handle("/metadata", http.HandlerFunc(h.GetMetadata))
-	if err := http.ListenAndServe(":8081", nil); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf("localhost:%d", port), nil); err != nil {
 		panic(err)
 	}
 }
