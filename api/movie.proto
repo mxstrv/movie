@@ -28,7 +28,7 @@ message PutMetadataRequest{
 }
 
 message GetMetadataResponse {
-  string movie_id = 1;
+  Metadata metadata = 1;
 }
 
 message PutMetadataResponse {
