@@ -43,7 +43,7 @@ service RatingService {
 
 message GetAggregatedRatingRequest {
   string record_id = 1;
-  int32 record_type = 2;
+  string record_type = 2;
 }
 
 message GetAggregatedRatingResponse {
