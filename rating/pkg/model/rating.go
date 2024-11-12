@@ -26,3 +26,21 @@ type Rating struct {
 	UserID     UserID      `json:"userId"`
 	Value      RatingValue `json:"value"`
 }
+
+// RatingEvent defines an event containing rating information.
+type RatingEvent struct {
+	UserID     UserID          `json:"userId"`
+	RecordID   RecordID        `json:"recordId"`
+	RecordType RecordType      `json:"recordType"`
+	Value      RatingValue     `json:"value"`
+	EventType  RatingEventType `json:"eventType"`
+}
+
+// RatingEventType defines a rating event.
+type RatingEventType string
+
+// Rating event types.
+const (
+	RatingEventTypePut = "put"
+	RatingEventDelete  = "delete"
+)
