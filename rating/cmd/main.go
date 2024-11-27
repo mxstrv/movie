@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"movieapp/rating/internal/ingester/kafka"
 	"net"
 	"time"
 
@@ -44,7 +45,14 @@ func main() {
 	}()
 	defer registry.Deregister(ctx, instanceID, serviceName)
 	repo := memory.New()
-	ctrl := rating.New(repo)
+	ingester, err := kafka.NewIngester("localhost", "rating", "ratings")
+	if err != nil {
+		log.Fatalf("failed to initialize ingester: %v", err)
+	}
+	ctrl := rating.New(repo, ingester)
+	if err := ctrl.StartIngestion(ctx); err != nil {
+		log.Fatalf("failed to start ingestion: %v", err)
+	}
 	h := grpchandler.New(ctrl)
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", port))
 	if err != nil {
