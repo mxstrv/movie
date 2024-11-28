@@ -10,7 +10,7 @@ import (
 	"movieapp/gen"
 	"movieapp/metadata/internal/controller/metadata"
 	grpchandler "movieapp/metadata/internal/handler/grpc"
-	"movieapp/metadata/internal/repository/memory"
+	"movieapp/metadata/internal/repository/mysql"
 	"movieapp/pkg/discovery"
 	"movieapp/pkg/discovery/consul"
 	"net"
@@ -50,7 +50,10 @@ func main() {
 		_ = registry.Deregister(ctx, instanceID, serviceName)
 	}(registry, ctx, instanceID, serviceName)
 
-	repo := memory.New()
+	repo, err := mysql.New()
+	if err != nil {
+		panic(err)
+	}
 	ctrl := metadata.New(repo)
 	h := grpchandler.New(ctrl)
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", port))
