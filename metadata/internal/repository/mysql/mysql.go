@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	_ "github.com/go-sql-driver/mysql"
 	"movieapp/metadata/internal/repository"
 	"movieapp/metadata/pkg/model"
 	"os"
