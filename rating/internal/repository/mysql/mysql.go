@@ -15,7 +15,7 @@ type Repository struct {
 }
 
 // New creates a new MySQL-based repository.
-func New(db *sql.DB) (*Repository, error) {
+func New() (*Repository, error) {
 	dbUsername := os.Getenv("DB_USERNAME")
 	dbPassword := os.Getenv("DB_PASSWORD") // TODO: implement better solution.
 	dbName := os.Getenv("DB_NAME")
