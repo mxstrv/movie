@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
+	"gopkg.in/yaml.v3"
 	"log"
 	"movieapp/rating/internal/ingester/kafka"
 	"net"
+	"os"
 	"time"
 
 	"google.golang.org/grpc"
@@ -22,9 +23,15 @@ import (
 const serviceName = "rating"
 
 func main() {
-	var port int
-	flag.IntVar(&port, "port", 8082, "API handler port")
-	flag.Parse()
+	f, err := os.Open("base.yaml")
+	if err != nil {
+		panic(err)
+	}
+	var cfg config
+	if err := yaml.NewDecoder(f).Decode(&cfg); err != nil {
+		panic(err)
+	}
+	port := cfg.API.Port
 	log.Printf("Starting the rating service on port %d", port)
 	registry, err := consul.NewRegistry("localhost:8500")
 	if err != nil {
